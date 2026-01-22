@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id         Int      @id @default(autoincrement())
+  name       String
+  type       String
+  region     String
+  created_at DateTime @default(now())
+
+  users          User[]
+  robots         Robot[]
+  courseAccesses OrganizationCourseAccess[]
+  licenses       License[]
+  notifications  LicenseNotification[]
+
+  @@index([name])
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password_hash String
+  org_id        Int?
+  is_superadmin Boolean  @default(false)
+  is_active     Boolean  @default(true)
+
+  organization Organization?  @relation(fields: [org_id], references: [id])
+  permissions  UserPermission[]
+  auditLogs    AdminAuditLog[] @relation("AuditActor")
+
+  @@index([org_id])
+}
+
+model Permission {
+  id             Int      @id @default(autoincrement())
+  permission_key String   @unique
+  description    String
+
+  users UserPermission[]
+}
+
+model UserPermission {
+  id            Int @id @default(autoincrement())
+  user_id       Int
+  permission_id Int
+
+  user       User       @relation(fields: [user_id], references: [id])
+  permission Permission @relation(fields: [permission_id], references: [id])
+
+  @@unique([user_id, permission_id])
+}
+
+model Robot {
+  id         Int     @id @default(autoincrement())
+  robot_code String  @unique
+  org_id     Int
+  is_active  Boolean @default(true)
+
+  organization Organization @relation(fields: [org_id], references: [id])
+  licenses     License[]
+  usageLogs    RobotUsageLog[]
+  notifications LicenseNotification[]
+
+  @@index([org_id])
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  course_code String   @unique
+  course_name String
+  is_public   Boolean  @default(false)
+  source      CourseSource
+  updated_at  DateTime @updatedAt
+
+  levels        CourseLevel[]
+  accessGrants  OrganizationCourseAccess[]
+  usageLogs     RobotUsageLog[]
+
+  @@index([course_code])
+}
+
+model CourseLevel {
+  id          Int    @id @default(autoincrement())
+  course_id   Int
+  level_name  String
+  sequence_no Int
+
+  course  Course   @relation(fields: [course_id], references: [id])
+  lessons Lesson[]
+
+  @@unique([course_id, sequence_no])
+}
+
+model Lesson {
+  id              Int         @id @default(autoincrement())
+  course_level_id Int
+  lesson_name     String
+  content_type    ContentType
+  content_url     String
+  is_public       Boolean     @default(false)
+  updated_at      DateTime    @updatedAt
+
+  courseLevel CourseLevel @relation(fields: [course_level_id], references: [id])
+  usageLogs   RobotUsageLog[]
+}
+
+model OrganizationCourseAccess {
+  id             Int      @id @default(autoincrement())
+  org_id         Int
+  course_id      Int
+  allowed_levels Json
+  assigned_at    DateTime @default(now())
+
+  organization Organization @relation(fields: [org_id], references: [id])
+  course       Course       @relation(fields: [course_id], references: [id])
+
+  @@unique([org_id, course_id])
+}
+
+model License {
+  id          Int      @id @default(autoincrement())
+  license_key String   @unique
+  org_id      Int
+  robot_id    Int
+  valid_from  DateTime
+  valid_until DateTime
+  is_active   Boolean  @default(true)
+
+  organization Organization @relation(fields: [org_id], references: [id])
+  robot        Robot        @relation(fields: [robot_id], references: [id])
+  notifications LicenseNotification[]
+
+  @@index([org_id])
+  @@index([robot_id])
+  @@index([valid_until])
+}
+
+model AdminAuditLog {
+  id            Int      @id @default(autoincrement())
+  actor_user_id Int
+  action_type   String
+  entity_type   String
+  entity_id     Int
+  created_at    DateTime @default(now())
+
+  actor User @relation("AuditActor", fields: [actor_user_id], references: [id])
+}
+
+model RobotUsageLog {
+  id               Int      @id @default(autoincrement())
+  robot_id         Int
+  course_id        Int
+  lesson_id        Int?
+  opened_at        DateTime @default(now())
+  duration_seconds Int
+
+  robot  Robot  @relation(fields: [robot_id], references: [id])
+  course Course @relation(fields: [course_id], references: [id])
+  lesson Lesson? @relation(fields: [lesson_id], references: [id])
+
+  @@unique([robot_id, course_id, lesson_id, opened_at])
+}
+
+model LicenseNotification {
+  id            Int      @id @default(autoincrement())
+  org_id        Int
+  robot_id      Int?
+  license_id    Int
+  type          LicenseNotificationType
+  message       String
+  created_at    DateTime @default(now())
+  acknowledged  Boolean  @default(false)
+
+  organization Organization @relation(fields: [org_id], references: [id])
+  robot        Robot?       @relation(fields: [robot_id], references: [id])
+  license      License      @relation(fields: [license_id], references: [id])
+
+  @@index([license_id])
+  @@index([org_id])
+}
+
+enum CourseSource {
+  WHIZROBOT
+  SCHOOL
+}
+
+enum ContentType {
+  VIDEO
+  IMAGE
+  TEXT
+}
+
+enum LicenseNotificationType {
+  WARNING_30_DAYS
+  WARNING_7_DAYS
+  EXPIRED
+}
