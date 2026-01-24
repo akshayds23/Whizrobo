@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #EC7B21;
+}
+
+body {
+  font-family: var(--font-montserrat);
+}

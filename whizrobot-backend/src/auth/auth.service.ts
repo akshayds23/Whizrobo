@@ -25,6 +25,11 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: {
+        role: {
+          include: {
+            permissions: true,
+          },
+        },
         permissions: {
           include: {
             permission: true,
@@ -42,8 +47,16 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const permissions = user.permissions.map(
+    const directPermissions = user.permissions.map(
       (userPermission) => userPermission.permission.permission_key,
+    );
+    const rolePermissions = user.role
+      ? user.role.permissions.map(
+          (rolePermission) => rolePermission.permission_key,
+        )
+      : [];
+    const permissions = Array.from(
+      new Set([...directPermissions, ...rolePermissions]),
     );
 
     const payload: JwtPayload = {

@@ -25,6 +25,7 @@ model Organization {
   courseAccesses OrganizationCourseAccess[]
   licenses       License[]
   notifications  LicenseNotification[]
+  roles          Role[]
 
   @@index([name])
 }
@@ -34,14 +35,17 @@ model User {
   email         String   @unique
   password_hash String
   org_id        Int?
+  role_id       Int?
   is_superadmin Boolean  @default(false)
   is_active     Boolean  @default(true)
 
   organization Organization?  @relation(fields: [org_id], references: [id])
+  role         Role?          @relation(fields: [role_id], references: [id])
   permissions  UserPermission[]
   auditLogs    AdminAuditLog[] @relation("AuditActor")
 
   @@index([org_id])
+  @@index([role_id])
 }
 
 model Permission {
@@ -50,6 +54,28 @@ model Permission {
   description    String
 
   users UserPermission[]
+}
+
+model Role {
+  id     Int     @id @default(autoincrement())
+  name   String
+  org_id Int
+
+  organization Organization @relation(fields: [org_id], references: [id])
+  users        User[]
+  permissions  RolePermission[]
+
+  @@index([org_id])
+}
+
+model RolePermission {
+  id             Int    @id @default(autoincrement())
+  role_id        Int
+  permission_key String
+
+  role Role @relation(fields: [role_id], references: [id])
+
+  @@unique([role_id, permission_key])
 }
 
 model UserPermission {
@@ -68,6 +94,8 @@ model Robot {
   robot_code String  @unique
   org_id     Int
   is_active  Boolean @default(true)
+  last_sync_at DateTime?
+  refresh_required Boolean @default(false)
 
   organization Organization @relation(fields: [org_id], references: [id])
   licenses     License[]

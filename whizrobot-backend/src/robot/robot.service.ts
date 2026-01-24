@@ -67,6 +67,23 @@ export class RobotService {
   ) {}
 
   async sync(payload: JwtPayload): Promise<SyncResponse> {
+    const robot = await this.prisma.robot.findUnique({
+      where: { id: payload.sub },
+    });
+
+    if (!robot || !robot.is_active) {
+      return {
+        status: 'LOCKED',
+        lock_reason: 'REVOKED',
+        license_status: 'REVOKED',
+        days_remaining: null,
+        notifications: [],
+        refresh_required: false,
+        courses: [],
+        public_courses: [],
+      };
+    }
+
     const licenseInfo = await this.licenseStatusService.getStatusForRobot(
       payload.sub,
     );
@@ -74,6 +91,10 @@ export class RobotService {
     const licenseStatus: LicenseStatus = licenseInfo?.status ?? 'REVOKED';
 
     if (licenseStatus === 'EXPIRED' || licenseStatus === 'REVOKED') {
+      await this.prisma.robot.update({
+        where: { id: robot.id },
+        data: { last_sync_at: new Date() },
+      });
       return {
         status: 'LOCKED',
         lock_reason: licenseStatus,
@@ -91,6 +112,10 @@ export class RobotService {
     }
 
     if (payload.org_id == null) {
+      await this.prisma.robot.update({
+        where: { id: robot.id },
+        data: { last_sync_at: new Date() },
+      });
       return {
         status: 'LOCKED',
         lock_reason: 'ACCESS_REMOVED',
@@ -121,6 +146,10 @@ export class RobotService {
     });
 
     if (accessRows.length === 0) {
+      await this.prisma.robot.update({
+        where: { id: robot.id },
+        data: { last_sync_at: new Date() },
+      });
       return {
         status: 'LOCKED',
         lock_reason: 'ACCESS_REMOVED',
@@ -152,6 +181,15 @@ export class RobotService {
       },
     });
 
+    const refreshRequired = robot.refresh_required;
+    await this.prisma.robot.update({
+      where: { id: robot.id },
+      data: {
+        last_sync_at: new Date(),
+        refresh_required: false,
+      },
+    });
+
     return {
       status: 'OK',
       license_status: licenseStatus,
@@ -161,7 +199,7 @@ export class RobotService {
           type: notification.type,
           message: notification.message,
         })) ?? [],
-      refresh_required: false,
+      refresh_required: refreshRequired,
       courses,
       public_courses: publicCourses.map((course) =>
         this.formatCoursePublic(course),

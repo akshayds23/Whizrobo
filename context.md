@@ -261,3 +261,306 @@ Use this file to track each prompt: what task was executed, what changed, and th
 - Files:
   - `whizrobot-backend/package.json`
   - `whizrobot-backend/package-lock.json`
+
+### 2026-01-22 19:25
+- Task: Scaffold Next.js + Tailwind frontend project.
+- Steps:
+  1. Ran create-next-app with TypeScript, ESLint, Tailwind, src/ directory, and App Router.
+  2. Attempted to start dev server for verification.
+- Changes:
+  - Added new frontend project scaffold.
+- Files:
+  - `whizrobot-frontend/package.json`
+  - `whizrobot-frontend/next.config.js`
+  - `whizrobot-frontend/tailwind.config.ts`
+  - `whizrobot-frontend/postcss.config.js`
+  - `whizrobot-frontend/src/app`
+  - `whizrobot-frontend/src/components`
+  - `whizrobot-frontend/src/styles`
+
+### 2026-01-22 19:40
+- Task: Apply Whizrobo branding and base layout shell to frontend.
+- Steps:
+  1. Replaced font setup with Montserrat and updated body classes.
+  2. Simplified global styles to brand variables and Montserrat font.
+  3. Added AppShell layout component with sidebar and main area.
+  4. Updated home page to use AppShell.
+- Changes:
+  - Updated layout and global styles.
+  - Added layout shell component.
+  - Replaced default Next.js welcome page.
+- Files:
+  - `whizrobot-frontend/src/app/layout.tsx`
+  - `whizrobot-frontend/src/app/globals.css`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+
+### 2026-01-22 19:55
+- Task: Add permission-driven dashboard blocks and registry scaffolding.
+- Steps:
+  1. Added a permissions registry as a single source of truth.
+  2. Added dashboard card and grid components with permission checks.
+  3. Updated home page to render permission-driven cards with a simulated permissions list.
+- Changes:
+  - Added permissions config and dashboard components.
+  - Updated dashboard page content.
+- Files:
+  - `whizrobot-frontend/src/config/permissions.ts`
+  - `whizrobot-frontend/src/components/dashboard/DashboardCard.tsx`
+  - `whizrobot-frontend/src/components/dashboard/DashboardGrid.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+
+### 2026-01-22 20:05
+- Task: Integrate frontend dashboard permissions with backend /auth/me.
+- Steps:
+  1. Added a centralized API client that injects the JWT from localStorage.
+  2. Added a useAuth hook to fetch the current user and permissions.
+  3. Updated the dashboard page to use real permissions and show loading/auth states.
+- Changes:
+  - Added API service and auth hook.
+  - Updated dashboard page to use backend permissions.
+- Files:
+  - `whizrobot-frontend/src/services/api.ts`
+  - `whizrobot-frontend/src/hooks/useAuth.ts`
+  - `whizrobot-frontend/src/app/page.tsx`
+
+### 2026-01-22 20:18
+- Task: Add login UI and wire authentication flow with dashboard redirect.
+- Steps:
+  1. Created /login page with Whizrobo-branded form and login flow.
+  2. Stored JWT in localStorage after successful login and redirected to dashboard.
+  3. Added redirect from dashboard to /login when unauthenticated.
+- Changes:
+  - Added login page route.
+  - Updated dashboard page to redirect unauthenticated users.
+- Files:
+  - `whizrobot-frontend/src/app/login/page.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+
+### 2026-01-22 20:28
+- Task: Scaffold organization onboarding wizard layout and navigation.
+- Steps:
+  1. Added wizard shell with progress indicator and step container.
+  2. Added placeholder step components for details, roles, capabilities, and review.
+  3. Created /organizations/new page with step navigation and Next/Back controls.
+- Changes:
+  - Added wizard shell and step components.
+  - Added wizard route with client-side navigation state.
+- Files:
+  - `whizrobot-frontend/src/components/wizard/WizardShell.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/OrgDetailsStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/RoleTemplateStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/CapabilityStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+  - `whizrobot-frontend/src/app/organizations/new/page.tsx`
+
+### 2026-01-22 20:40
+- Task: Undo the onboarding wizard scaffold.
+- Steps:
+  1. Deleted wizard shell component.
+  2. Deleted wizard step placeholder components.
+  3. Deleted /organizations/new route.
+- Changes:
+  - Removed wizard layout and step files.
+- Files:
+  - `whizrobot-frontend/src/components/wizard/WizardShell.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/CapabilityStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/OrgDetailsStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/RoleTemplateStep.tsx`
+  - `whizrobot-frontend/src/app/organizations/new/page.tsx`
+
+### 2026-01-22 20:48
+- Task: Redo onboarding wizard scaffold.
+- Steps:
+  1. Recreated wizard shell component.
+  2. Recreated wizard step placeholder components.
+  3. Recreated /organizations/new route with navigation state.
+- Changes:
+  - Added wizard layout and step files.
+- Files:
+  - `whizrobot-frontend/src/components/wizard/WizardShell.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/OrgDetailsStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/RoleTemplateStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/CapabilityStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+  - `whizrobot-frontend/src/app/organizations/new/page.tsx`
+
+### 2026-01-22 21:05
+- Task: Wire organization creation from wizard to backend.
+- Steps:
+  1. Added shared org state in wizard page and passed to steps.
+  2. Implemented organization details inputs and updates.
+  3. Added create organization action with loading/error handling and redirect.
+  4. Updated step components to accept shared props.
+- Changes:
+  - Updated wizard steps and page to handle org data and submission.
+- Files:
+  - `whizrobot-frontend/src/app/organizations/new/page.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/OrgDetailsStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/RoleTemplateStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/CapabilityStep.tsx`
+
+### 2026-01-22 21:25
+- Task: Add role and capability selection with capability-to-permission mapping in the wizard.
+- Steps:
+  1. Added capability mapping config as the UI contract.
+  2. Added roles state to the wizard and wired roles to steps.
+  3. Implemented role template selection and capability checkboxes.
+  4. Translated capabilities to permissions on submit and added review summary.
+- Changes:
+  - Added capabilities config.
+  - Updated wizard steps to manage roles/capabilities.
+  - Updated review step to compute permissions and show a roles summary.
+- Files:
+  - `whizrobot-frontend/src/config/capabilities.ts`
+  - `whizrobot-frontend/src/app/organizations/new/page.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/RoleTemplateStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/CapabilityStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+  - `whizrobot-frontend/src/components/wizard/steps/OrgDetailsStep.tsx`
+
+### 2026-01-22 21:38
+- Task: Send org + roles + permissions payload from wizard to backend.
+- Steps:
+  1. Updated create call to submit organization and roles with permissions.
+  2. Updated error messaging for role persistence failures.
+- Changes:
+  - Updated review step submission payload and error handling.
+- Files:
+  - `whizrobot-frontend/src/components/wizard/steps/ReviewStep.tsx`
+
+### 2026-01-22 22:05
+- Task: Persist organization roles and permissions in backend.
+- Steps:
+  1. Added Role and RolePermission models plus user role relation in Prisma schema.
+  2. Updated organization create DTO to accept organization+roles payload while keeping backward compatibility.
+  3. Implemented transactional org/role/permission creation and updated response payload.
+  4. Updated auth permission resolution to include role-based permissions.
+- Changes:
+  - Updated Prisma schema with role entities.
+  - Updated organizations controller/service and DTOs for new payload.
+  - Updated auth service to merge role and direct permissions.
+- Files:
+  - `whizrobot-backend/prisma/schema.prisma`
+  - `whizrobot-backend/src/organizations/dto/create-organization.dto.ts`
+  - `whizrobot-backend/src/organizations/organizations.controller.ts`
+  - `whizrobot-backend/src/organizations/organizations.service.ts`
+  - `whizrobot-backend/src/auth/auth.service.ts`
+
+### 2026-01-22 22:35
+- Task: Add user-to-role assignment APIs and frontend create-user flow.
+- Steps:
+  1. Added org user creation DTO and service logic with role ownership checks and password hashing.
+  2. Added endpoints to list org roles and create users under an org.
+  3. Added Users route with create-user form and access-level dropdown.
+  4. Updated AppShell to show Users nav when org management permissions exist.
+- Changes:
+  - Added backend DTO, service, and controller endpoints for user assignment.
+  - Added frontend Users page and nav visibility based on permissions.
+- Files:
+  - `whizrobot-backend/src/organizations/dto/create-org-user.dto.ts`
+  - `whizrobot-backend/src/organizations/organizations.service.ts`
+  - `whizrobot-backend/src/organizations/organizations.controller.ts`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+  - `whizrobot-frontend/src/app/users/page.tsx`
+
+### 2026-01-22 23:10
+- Task: Add audit log read API and Activity UI.
+- Steps:
+  1. Added audit log module, controller, and service with permission-protected listing.
+  2. Implemented org-scoped filtering and basic pagination with log enrichment.
+  3. Added Activity route and table UI, plus sidebar link gated by VIEW_AUDIT_LOGS.
+- Changes:
+  - Added audit log API endpoint and module wiring.
+  - Added Activity page and updated AppShell navigation.
+- Files:
+  - `whizrobot-backend/src/audit-logs/audit-logs.module.ts`
+  - `whizrobot-backend/src/audit-logs/audit-logs.controller.ts`
+  - `whizrobot-backend/src/audit-logs/audit-logs.service.ts`
+  - `whizrobot-backend/src/app.module.ts`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/app/activity/page.tsx`
+
+### 2026-01-23 00:05
+- Task: Add robot control endpoints and UI for status/refresh/lock.
+- Steps:
+  1. Added robot status fields to Prisma schema.
+  2. Implemented admin robot endpoints for listing, refresh, and lock actions.
+  3. Updated robot sync to track last sync time and refresh flags.
+  4. Added robots UI page and sidebar link gated by MANAGE_ROBOTS.
+- Changes:
+  - Added robots module, controller, and service in backend.
+  - Added robots page and permissions wiring in frontend.
+  - Updated permissions/capabilities to include MANAGE_ROBOTS.
+- Files:
+  - `whizrobot-backend/prisma/schema.prisma`
+  - `whizrobot-backend/src/robot/robot.service.ts`
+  - `whizrobot-backend/src/robots/robots.module.ts`
+  - `whizrobot-backend/src/robots/robots.controller.ts`
+  - `whizrobot-backend/src/robots/robots.service.ts`
+  - `whizrobot-backend/src/app.module.ts`
+  - `whizrobot-frontend/src/config/permissions.ts`
+  - `whizrobot-frontend/src/config/capabilities.ts`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/app/robots/page.tsx`
+
+### 2026-01-23 01:05
+- Task: Create full database seed for local verification.
+- Steps:
+  1. Replaced prisma/seed.ts with deterministic, ordered seeding for orgs, roles, permissions, users, courses, robots, licenses, audit logs, and usage logs.
+  2. Fixed package.json prisma seed config formatting.
+- Changes:
+  - Added comprehensive seed script and updated package.json.
+- Files:
+  - `whizrobot-backend/prisma/seed.ts`
+  - `whizrobot-backend/package.json`
+
+### 2026-01-23 13:24
+- Task: Fix TypeScript build errors for audit logs and organization creation.
+- Steps:
+  1. Removed duplicate declarations and ensured organization create uses non-optional fields after validation.
+  2. Filtered nullable org IDs when building user org map for audit log enrichment.
+- Changes:
+  - Updated organization service to avoid optional field type errors.
+  - Updated audit log service to avoid Map<number, number | null> typing.
+- Files:
+  - `whizrobot-backend/src/organizations/organizations.service.ts`
+  - `whizrobot-backend/src/audit-logs/audit-logs.service.ts`
+
+### 2026-01-23 14:02
+- Task: Implement section-based dashboard registry and super admin visibility fix.
+- Steps:
+  1. Added dashboard section registry as a single source of truth.
+  2. Updated dashboard to render sections with super admin bypass.
+  3. Updated dashboard grid to accept cards list.
+  4. Simplified sidebar spacing to be content-driven.
+- Changes:
+  - Added dashboard sections config.
+  - Updated dashboard components and layout.
+  - Updated sidebar nav to use a nav items list.
+- Files:
+  - `whizrobot-frontend/src/config/dashboardSections.ts`
+  - `whizrobot-frontend/src/components/dashboard/DashboardGrid.tsx`
+  - `whizrobot-frontend/src/components/dashboard/DashboardCard.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+
+### 2026-01-23 14:28
+- Task: Implement section-based dashboard registry with clickable cards and UI polish.
+- Steps:
+  1. Added multiple cards per dashboard section in the registry.
+  2. Made dashboard cards clickable and updated styling per spec.
+  3. Added empty-state message when no sections are visible.
+  4. Polished sidebar link hover styles.
+- Changes:
+  - Updated dashboard registry, cards, grid, and dashboard page.
+  - Updated sidebar link styles.
+- Files:
+  - `whizrobot-frontend/src/config/dashboardSections.ts`
+  - `whizrobot-frontend/src/components/dashboard/DashboardCard.tsx`
+  - `whizrobot-frontend/src/components/dashboard/DashboardGrid.tsx`
+  - `whizrobot-frontend/src/app/page.tsx`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
