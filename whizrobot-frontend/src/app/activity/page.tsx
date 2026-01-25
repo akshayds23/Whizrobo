@@ -62,14 +62,20 @@ export default function ActivityPage() {
 
   if (!canViewAudit) {
     return (
-      <AppShell permissions={permissions}>
+      <AppShell
+        permissions={permissions}
+        isSuperadmin={Boolean(user?.is_superadmin)}
+      >
         <div className="text-sm text-gray-600">Access not available.</div>
       </AppShell>
     );
   }
 
   return (
-    <AppShell permissions={permissions}>
+    <AppShell
+      permissions={permissions}
+      isSuperadmin={Boolean(user?.is_superadmin)}
+    >
       <h2 className="text-2xl font-semibold mb-6">Activity</h2>
 
       <div className="rounded-lg border border-gray-200 bg-white">

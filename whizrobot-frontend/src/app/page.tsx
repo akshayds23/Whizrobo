@@ -27,7 +27,10 @@ export default function Home() {
   );
 
   return (
-    <AppShell permissions={user.permissions || []}>
+    <AppShell
+      permissions={user.permissions || []}
+      isSuperadmin={Boolean(user.is_superadmin)}
+    >
       <div className="max-w-7xl mx-auto px-6 py-8">
         <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
 

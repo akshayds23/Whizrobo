@@ -564,3 +564,54 @@ Use this file to track each prompt: what task was executed, what changed, and th
   - `whizrobot-frontend/src/components/dashboard/DashboardGrid.tsx`
   - `whizrobot-frontend/src/app/page.tsx`
   - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+
+### 2026-01-23 15:05
+- Task: Add super admin sidebar sections and roles/permissions management UI.
+- Steps:
+  1. Added backend endpoints to read and update role permissions scoped to org.
+  2. Updated sidebar to render sectioned navigation for super admin.
+  3. Added Access Levels page with role dropdown and CRUD access level selects.
+  4. Added placeholder pages for courses and analytics, and an organizations list page.
+  5. Updated dashboard sections registry for new routes.
+- Changes:
+  - Added role permissions DTO and endpoints.
+  - Added roles UI and new routes for courses, analytics, organizations.
+  - Updated sidebar and dashboard section registry.
+- Files:
+  - `whizrobot-backend/src/organizations/dto/update-role-permissions.dto.ts`
+  - `whizrobot-backend/src/organizations/organizations.service.ts`
+  - `whizrobot-backend/src/organizations/organizations.controller.ts`
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/app/roles/page.tsx`
+  - `whizrobot-frontend/src/app/courses/page.tsx`
+  - `whizrobot-frontend/src/app/analytics/page.tsx`
+  - `whizrobot-frontend/src/app/organizations/page.tsx`
+  - `whizrobot-frontend/src/config/dashboardSections.ts`
+
+### 2026-01-24 14:35
+- Task: Add user list with role dropdown and CRUD toggle switches.
+- Steps:
+  1. Added backend endpoints to list users, update user role, and update direct permissions.
+  2. Added DTOs for user role and permission updates.
+  3. Updated Users page to show all users, role dropdown, and CRUD toggle switches with slider UI.
+  4. Added internal org resolution for super admin users.
+- Changes:
+  - Added backend user management endpoints and DTOs.
+  - Updated Users UI to render table rows and toggle permissions.
+- Files:
+  - `whizrobot-backend/src/organizations/organizations.service.ts`
+  - `whizrobot-backend/src/organizations/organizations.controller.ts`
+  - `whizrobot-backend/src/organizations/dto/update-user-role.dto.ts`
+  - `whizrobot-backend/src/organizations/dto/update-user-permissions.dto.ts`
+  - `whizrobot-frontend/src/app/users/page.tsx`
+
+### 2026-01-24 14:58
+- Task: Move Users link into Roles & Permissions section and remove sidebar repetition.
+- Steps:
+  1. Updated super admin sidebar to place Users under Roles & Permissions and removed it from Organizations.
+  2. Removed the Users dashboard section and placed Manage Users card under Roles & Permissions.
+- Changes:
+  - Updated sidebar section structure and dashboard registry.
+- Files:
+  - `whizrobot-frontend/src/components/layout/AppShell.tsx`
+  - `whizrobot-frontend/src/config/dashboardSections.ts`

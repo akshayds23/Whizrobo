@@ -60,7 +60,10 @@ export default function RobotsPage() {
 
   if (!canManageRobots) {
     return (
-      <AppShell permissions={permissions}>
+      <AppShell
+        permissions={permissions}
+        isSuperadmin={Boolean(user?.is_superadmin)}
+      >
         <div className="text-sm text-gray-600">Access not available.</div>
       </AppShell>
     );
@@ -94,7 +97,10 @@ export default function RobotsPage() {
   }
 
   return (
-    <AppShell permissions={permissions}>
+    <AppShell
+      permissions={permissions}
+      isSuperadmin={Boolean(user?.is_superadmin)}
+    >
       <h2 className="text-2xl font-semibold mb-6">Robots</h2>
 
       <div className="rounded-lg border border-gray-200 bg-white">

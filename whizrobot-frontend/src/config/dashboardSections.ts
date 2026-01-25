@@ -19,8 +19,20 @@ export const DASHBOARD_SECTIONS = [
     ],
   },
   {
-    id: "users",
-    title: "Users",
+    id: "courses",
+    title: "Courses",
+    permission: PERMISSIONS.ASSIGN_COURSE,
+    cards: [
+      {
+        title: "Course Library",
+        description: "Browse and organize course content",
+        href: "/courses",
+      },
+    ],
+  },
+  {
+    id: "roles",
+    title: "Roles & Permissions",
     permission: PERMISSIONS.CREATE_ORG,
     cards: [
       {
@@ -29,9 +41,21 @@ export const DASHBOARD_SECTIONS = [
         href: "/users",
       },
       {
-        title: "Access Levels",
-        description: "Review access levels and role coverage",
-        href: "/users",
+        title: "Roles & Permissions",
+        description: "Set what each access level can do",
+        href: "/roles",
+      },
+    ],
+  },
+  {
+    id: "analytics",
+    title: "Analytics",
+    permission: PERMISSIONS.VIEW_ANALYTICS,
+    cards: [
+      {
+        title: "Performance Overview",
+        description: "Track usage and engagement",
+        href: "/analytics",
       },
     ],
   },
